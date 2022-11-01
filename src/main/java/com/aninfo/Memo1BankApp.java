@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Predicate;
+
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -79,7 +81,7 @@ public class Memo1BankApp {
 	public Docket apiDocket() {
 		return new Docket(DocumentationType.SWAGGER_2)
 			.select()
-			.apis(RequestHandlerSelectors.any())
+			.apis(RequestHandlerSelectors.basePackage(this.getClass().getPackageName()))
 			.paths(PathSelectors.any())
 			.build();
 	}
