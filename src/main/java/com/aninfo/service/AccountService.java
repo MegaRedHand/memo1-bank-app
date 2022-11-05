@@ -19,6 +19,10 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
+    final double PROMO_CAP = 500.0;
+    final double PROMO_MINIMUM = 2000;
+    final double PROMO_RATIO = 0.1;
+
     public Account createAccount(Account account) {
         return accountRepository.save(account);
     }
@@ -70,6 +74,10 @@ public class AccountService {
 
         if (sum <= 0) {
             throw new DepositNegativeSumException("Cannot deposit negative sums");
+        }
+
+        if (sum >= PROMO_MINIMUM) {
+            sum += Math.min(PROMO_RATIO * sum, PROMO_CAP);
         }
 
         Account account = accountRepository.findAccountByCbu(cbu);
