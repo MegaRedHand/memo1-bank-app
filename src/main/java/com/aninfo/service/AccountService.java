@@ -2,7 +2,9 @@ package com.aninfo.service;
 
 import com.aninfo.exceptions.DepositNegativeSumException;
 import com.aninfo.exceptions.InsufficientFundsException;
+import com.aninfo.exceptions.InvalidTransactionTypeException;
 import com.aninfo.model.Account;
+import com.aninfo.model.Transaction;
 import com.aninfo.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,18 @@ public class AccountService {
 
     public void deleteById(Long cbu) {
         accountRepository.deleteById(cbu);
+    }
+
+    @Transactional
+    public Account applyTransaction(Transaction transaction) {
+        switch (transaction.getType()) {
+            case WITHDRAWAL:
+                return this.withdraw(transaction.getAccountCbu(), transaction.getAmount());
+            case DEPOSIT:
+                return this.deposit(transaction.getAccountCbu(), transaction.getAmount());
+            default:
+                throw new InvalidTransactionTypeException("Invalid transaction type");
+        }
     }
 
     @Transactional
