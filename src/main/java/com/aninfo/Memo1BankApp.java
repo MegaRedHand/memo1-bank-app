@@ -36,9 +36,9 @@ public class Memo1BankApp {
 	}
 
 	@PostMapping("/accounts")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Account createAccount(@RequestBody Account account) {
-		return accountService.createAccount(account);
+	public ResponseEntity<Account> createAccount(@RequestBody Account account) {
+		account = accountService.createAccount(account);
+		return ResponseEntity.created(URI.create("/accounts/" + account.getCbu())).build();
 	}
 
 	@GetMapping("/accounts")
@@ -99,7 +99,7 @@ public class Memo1BankApp {
 			return ResponseEntity.badRequest().build();
 		}
 		accountService.applyTransaction(transaction);
-		transactionService.save(transaction);
+		transaction = transactionService.save(transaction);
 		return ResponseEntity.created(URI.create("/transactions/" + transaction.getId())).build();
 	}
 
